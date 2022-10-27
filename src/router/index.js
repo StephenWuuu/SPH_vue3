@@ -34,6 +34,12 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "@/views/Search/index.vue"),
   },
+  {
+    path: "/detail/:skuId",
+    name: "detail",
+    component: () =>
+      import(/* webpackChunkName: "about" */"@/views/Detail/index.vue"),
+  },
 ];
 
 const router = createRouter({

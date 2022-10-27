@@ -10,3 +10,5 @@ export const reqBannerList = ()=>mockRequests.get("/banner")
 export const reqFloorList = ()=>mockRequests.get("/floor")
 // 获取商品数据
 export const reqProductList = (params)=>requests({url:"/list",method:"post",data:params})
+// 获取商品细节
+export const reqDetailInfo = (skuId)=>requests({url:`/item/${skuId}`,method:"get"})

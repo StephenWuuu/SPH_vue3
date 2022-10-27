@@ -1,11 +1,56 @@
 <template>
   <div class="type-nav">
-    <div
-      class="container"
-      @mouseenter="hideCategory"
-      @mouseleave="showCategory"
-    >
-      <h2 class="all">全部商品分类</h2>
+    <div class="container">
+      <div @mouseenter="showCategory" @mouseleave="hideCategory">
+        <h2 class="all">全部商品分类</h2>
+        <div class="sort" v-show="isShow">
+          <div class="all-sort-list2" @click="goSearch">
+            <div
+              class="item"
+              v-for="(c1, index) in store.categoryLists"
+              :key="c1.categoryId"
+              :class="{ cur: currentIndex == index }"
+            >
+              <h3 @mouseenter="changeIndex(index)">
+                <a
+                  :data-categoryName="c1.categoryName"
+                  :data-category1Id="c1.categoryId"
+                  >{{ c1.categoryName }}</a
+                >
+              </h3>
+              <div class="item-list clearfix">
+                <div class="subitem">
+                  <dl
+                    class="fore"
+                    v-for="(c2, index) in c1.categoryChild"
+                    :key="c2.categoryId"
+                  >
+                    <dt>
+                      <a
+                        :data-categoryName="c2.categoryName"
+                        :data-category1Id="c2.categoryId"
+                        >{{ c2.categoryName }}</a
+                      >
+                    </dt>
+                    <dd>
+                      <em
+                        v-for="(c3, index) in c2.categoryChild"
+                        :key="c3.categoryId"
+                      >
+                        <a
+                          :data-categoryName="c3.categoryName"
+                          :data-category1Id="c3.categoryId"
+                          >{{ c3.categoryName }}</a
+                        >
+                      </em>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <nav class="nav">
         <a href="###">服装城</a>
         <a href="###">美妆馆</a>
@@ -16,53 +61,6 @@
         <a href="###">有趣</a>
         <a href="###">秒杀</a>
       </nav>
-      <div class="sort" v-show="isShow">
-        <div class="all-sort-list2" @click="goSearch">
-          <div
-            class="item"
-            v-for="(c1, index) in store.categoryLists"
-            :key="c1.categoryId"
-            :class="{ cur: currentIndex == index }"
-          >
-            <h3 @mouseenter="changeIndex(index)">
-              <a
-                :data-categoryName="c1.categoryName"
-                :data-category1Id="c1.categoryId"
-                >{{ c1.categoryName }}</a
-              >
-            </h3>
-            <div class="item-list clearfix">
-              <div class="subitem">
-                <dl
-                  class="fore"
-                  v-for="(c2, index) in c1.categoryChild"
-                  :key="c2.categoryId"
-                >
-                  <dt>
-                    <a
-                      :data-categoryName="c2.categoryName"
-                      :data-category1Id="c2.categoryId"
-                      >{{ c2.categoryName }}</a
-                    >
-                  </dt>
-                  <dd>
-                    <em
-                      v-for="(c3, index) in c2.categoryChild"
-                      :key="c3.categoryId"
-                    >
-                      <a
-                        :data-categoryName="c3.categoryName"
-                        :data-category1Id="c3.categoryId"
-                        >{{ c3.categoryName }}</a
-                      >
-                    </em>
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -73,7 +71,7 @@ import { useRouter, useRoute } from "vue-router";
 import throttle from "lodash/throttle";
 
 const currentIndex = ref(-1);
-const isShow = ref(false);
+const isShow = ref(true);
 const router = useRouter();
 const route = useRoute();
 const store = categoryListStore();
@@ -81,16 +79,23 @@ onMounted(() => {
   isShow.value = route.path === "/home";
 });
 const showCategory = () => {
+  if (route.path != `/${route.path.split("/")[1]}`) {
+    isShow.value = true;
+  }
   if (route.path == "/search") {
+    isShow.value = true;
+  }
+};
+const hideCategory = () => {
+  if (
+    `/${route.path.split("/")[1]}` == "/search" ||
+    `/${route.path.split("/")[1]}` == "/detail"
+  ) {
     currentIndex.value = -1;
     isShow.value = false;
   }
 };
-const hideCategory = () => {
-  if (route.path !== "/home") {
-    isShow.value = true;
-  }
-};
+
 const changeIndex = () => {
   throttle(function (index) {
     currentIndex.value = index;

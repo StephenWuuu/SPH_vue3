@@ -7,8 +7,8 @@
           <p>尚品汇欢迎您！</p>
           <p>
             <span>请</span>
-            <a href="###">登录</a>
-            <a href="###" class="register">免费注册</a>
+            <router-link to="/login">登录</router-link>
+            <router-link class="register" to="/register">免费注册</router-link>
           </p>
         </div>
         <div class="typeList">
@@ -51,30 +51,30 @@
   </header>
 </template>
 <script setup>
-import { ref, reactive, watch } from "vue";
+import { ref, reactive, watch, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
 const router = useRouter();
 const route = useRoute();
-const keywords = ref(null);
+const keywords = ref("");
 
 const goSearch = () => {
   const { path, query } = route;
-  if (keywords) {
+  if (keywords.value) {
     if (path.indexOf("/search") === 0) {
       router.push({
-        path: "/search",
-        params: { keywords },
+        name: "search",
+        params: { keywords: keywords.value || undefined },
         query,
       });
     } else {
-      router.push(`/search/${keywords.value}`, undefined, () => {});
+      router.push(`/search/${keywords.value}`);
     }
   } else {
     if (path.indexOf("/search") === 0) {
-      router.push({ path: "/search", query });
+      router.push({ name: "search", query });
     } else {
-      router.push({ path: "/search" });
+      router.push({ name: "search" });
     }
   }
 };
