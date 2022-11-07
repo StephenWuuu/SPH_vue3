@@ -1,6 +1,6 @@
 <template>
-  <div class="swiper-container">
-    <div class="swiper-wrapper">
+  <div class="swiper-container" ref="cur">
+    <!-- <div class="swiper-wrapper">
       <div
         class="swiper-slide"
         v-for="(slide, index) in store.skuImageList"
@@ -14,18 +14,87 @@
       </div>
     </div>
     <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-prev"></div> -->
+    <!-- <el-carousel
+      class="swiper-wrapper"
+      :interval="4000"
+      type="card"
+      height="80px"
+    >
+      <el-carousel-item
+        class="swiper-slide"
+        v-for="(item, index) in store.skuImageList"
+        :key="item.id"
+      >
+        <el-image
+          :src="item.imgUrl"
+          :class="{ active: currentIndex == index }"
+          @click="changeCurrentIndex(index)"
+          style="width: 80px; height: 80px"
+        ></el-image>
+      </el-carousel-item>
+    </el-carousel> -->
+    <swiper
+      :modules="modules"
+      :slides-per-view="5"
+      :space-between="15"
+      :freeMode="true"
+      :pagination="{ clickable: true }"
+      @swiper="onSwiper"
+      @slideChange="onSlideChange"
+    >
+      <swiper-slide
+        v-for="(item, index) in store.skuImageList"
+        :key="item.id"
+        @click="changeCurrentIndex(index)"
+      >
+        <img :src="item.imgUrl" />
+      </swiper-slide>
+    </swiper>
   </div>
 </template>
 <script setup>
 import { detailInfoStore } from "@/store/detail";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import { FreeMode, Pagination } from "swiper";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 import { ref, reactive, watch, nextTick, onMounted } from "vue";
 
-const currentIndex = ref(0);
+const onSwiper = (swiper) => {
+  console.log("000", swiper);
+};
+const onSlideChange = () => {
+  console.log("slide change");
+};
+const modules = [FreeMode, Pagination];
+const currentIndex = ref(null);
 const store = detailInfoStore();
+const props = defineProps(["skuImageList"]);
+const emit = defineEmits(["getIndex"]);
 const changeCurrentIndex = (index) => {
   currentIndex.value = index;
+  emit("getIndex", currentIndex.value);
 };
+// watch(
+//   () => props.skuImageList,
+//   (newValue, oldValue) => {
+//     nextTick(() => {
+//       new Swiper({
+//         loop: true,
+
+//         navigation: {
+//           nextEl: ".swiper-button-next",
+//           prevEl: ".swiper-button-prev",
+//         },
+//         slidesPerView: 3,
+//         slidesPerGroup: 1,
+//       });
+//     });
+//   },
+//   { immediate: true }
+// );
 </script>
 <style scoped lang="less">
 .swiper-container {

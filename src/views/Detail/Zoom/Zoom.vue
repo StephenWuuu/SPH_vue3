@@ -1,15 +1,28 @@
 <template>
   <div class="spec-preview">
-    <img src="../images/s1.png" />
+    <img :src="store.skuInfo.skuDefaultImg" />
     <div class="event"></div>
     <div class="big">
-      <img src="../images/s1.png" />
+      <img :src="store.skuInfo.skuDefaultImg" />
     </div>
     <div class="mask"></div>
   </div>
 </template>
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, computed, onMounted } from "vue";
+import { detailInfoStore } from "@/store/detail";
+
+const currentIndex = ref(null);
+const store = detailInfoStore();
+const imgObj = computed(() => {
+  return skuImageList[currentIndex.value];
+});
+const getIndex = (index) => {
+  currentIndex.value = index;
+};
+onMounted(() => {
+  getIndex();
+});
 </script>
 <style scoped lang="less">
 .spec-preview {

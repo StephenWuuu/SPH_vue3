@@ -375,6 +375,7 @@ onMounted(() => {
 const skuImageList = computed(() => {
   return detailStore.skuImageList || [];
 });
+
 const changeActive = (saleAttrValue, arr) => {
   arr.forEach((item) => {
     item.isChecked = 0;
