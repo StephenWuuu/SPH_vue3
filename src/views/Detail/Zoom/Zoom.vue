@@ -15,10 +15,11 @@ import { detailInfoStore } from "@/store/detail";
 const currentIndex = ref(null);
 const store = detailInfoStore();
 const imgObj = computed(() => {
-  return skuImageList[currentIndex.value];
+  return store.skuImageList[currentIndex.value];
 });
 const getIndex = (index) => {
   currentIndex.value = index;
+  console.log("00000000000", currentIndex.value);
 };
 onMounted(() => {
   getIndex();

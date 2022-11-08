@@ -1,5 +1,5 @@
 <template>
-  <div class="swiper-container" ref="cur">
+  <div class="swiper-container" ref="swiper">
     <!-- <div class="swiper-wrapper">
       <div
         class="swiper-slide"
@@ -39,16 +39,18 @@
       :slides-per-view="5"
       :space-between="15"
       :freeMode="true"
+      navigation
       :pagination="{ clickable: true }"
       @swiper="onSwiper"
       @slideChange="onSlideChange"
+      class="mySwiper"
     >
       <swiper-slide
         v-for="(item, index) in store.skuImageList"
         :key="item.id"
         @click="changeCurrentIndex(index)"
       >
-        <img :src="item.imgUrl" />
+        <img :src="item.imgUrl" :class="{ active: currentIndex == index }" />
       </swiper-slide>
     </swiper>
   </div>
@@ -56,47 +58,26 @@
 <script setup>
 import { detailInfoStore } from "@/store/detail";
 import { Swiper, SwiperSlide } from "swiper/vue";
-import { FreeMode, Pagination } from "swiper";
+// import { FreeMode, Pagination } from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
-import "swiper/css/pagination";
+// import "swiper/css/pagination";
 import { ref, reactive, watch, nextTick, onMounted } from "vue";
-
-const onSwiper = (swiper) => {
-  console.log("000", swiper);
-};
-const onSlideChange = () => {
-  console.log("slide change");
-};
-const modules = [FreeMode, Pagination];
-const currentIndex = ref(null);
+const currentIndex = ref(0);
 const store = detailInfoStore();
-const props = defineProps(["skuImageList"]);
+const skuImageList = ref(store.skuImageList);
+// const props = defineProps(["skuImageList"]);
 const emit = defineEmits(["getIndex"]);
 const changeCurrentIndex = (index) => {
   currentIndex.value = index;
   emit("getIndex", currentIndex.value);
 };
-// watch(
-//   () => props.skuImageList,
-//   (newValue, oldValue) => {
-//     nextTick(() => {
-//       new Swiper({
-//         loop: true,
-
-//         navigation: {
-//           nextEl: ".swiper-button-next",
-//           prevEl: ".swiper-button-prev",
-//         },
-//         slidesPerView: 3,
-//         slidesPerGroup: 1,
-//       });
-//     });
-//   },
-//   { immediate: true }
-// );
 </script>
 <style scoped lang="less">
+.mySwiper {
+  background: #bfa;
+  margin: 10px 20px;
+}
 .swiper-container {
   height: 56px;
   width: 412px;
