@@ -1,15 +1,16 @@
 <template>
   <div class="spec-preview">
     <img :src="store.skuInfo.skuDefaultImg" />
-    <div class="event"></div>
+    <div class="event" @mousemove="handleMove"></div>
     <div class="big">
-      <img :src="store.skuInfo.skuDefaultImg" />
+      <img :src="store.skuInfo.skuDefaultImg" ref="big" />
     </div>
-    <div class="mask"></div>
+    <div class="mask" ref="mask"></div>
   </div>
 </template>
 <script setup>
 import { ref, reactive, computed, onMounted } from "vue";
+import throttle from "lodash/throttle";
 import { detailInfoStore } from "@/store/detail";
 
 const currentIndex = ref(null);
@@ -19,8 +20,28 @@ const imgObj = computed(() => {
 });
 const getIndex = (index) => {
   currentIndex.value = index;
-  console.log("00000000000", currentIndex.value);
 };
+const mask = ref(null);
+const big = ref(null);
+const handleMove = throttle((event) => {
+  let left = event.offsetX - mask.value.offsetWidth / 2;
+  let top = event.offsetY - mask.value.offsetHeight / 2;
+
+  if (left < 0) {
+    left = 0;
+  } else if (left >= mask.value.offsetWidth) {
+    left = mask.value.offsetWidth;
+  }
+  if (top < 0) {
+    top = 0;
+  } else if (top >= mask.value.offsetHeight) {
+    top = mask.value.offsetHeight;
+  }
+  mask.value.style.left = left + "px";
+  mask.value.style.top = top + "px";
+  big.value.style.left = -2 * left + "px";
+  big.value.style.top = -2 * top + "px";
+}, 50);
 onMounted(() => {
   getIndex();
 });

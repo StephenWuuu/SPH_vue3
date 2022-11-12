@@ -40,6 +40,12 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */"@/views/Detail/index.vue"),
   },
+  {
+    path: "/addcartsuccess",
+    name: "addCartSuccess",
+    component: () =>
+      import(/* webpackChunkName: "about" */"@/views/AddCartSuccess/index.vue"),
+  },
 ];
 
 const router = createRouter({

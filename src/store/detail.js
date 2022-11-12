@@ -1,4 +1,4 @@
-import { reqDetailInfo } from '@/api'
+import { reqDetailInfo ,reqAddShopCar} from '@/api'
 import { defineStore } from 'pinia'
 
 export const detailInfoStore = defineStore("detailInfo",{
@@ -13,6 +13,15 @@ export const detailInfoStore = defineStore("detailInfo",{
             if(result.code === 200){
                 this.detailInfo = result.data
             }
+        },
+        async addShopCar({skuId,skuNum}){
+            const result = await reqAddShopCar(skuId,skuNum)
+            if(result.code==200){
+                return "ok"
+            }else{
+                return Promise.reject(new Error("faile"))
+            }
+            // console.log("++++++++++++++",result);
         }
     },
     getters:{

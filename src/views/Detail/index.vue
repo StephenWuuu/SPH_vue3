@@ -121,7 +121,7 @@
                 >
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <a href="javascript:" @click="addToCart">加入购物车</a>
               </div>
             </div>
           </div>
@@ -388,6 +388,18 @@ const changeSkuNum = (event) => {
     skuNum.value = 1;
   } else {
     skuNum.value = parseInt(value);
+  }
+};
+const addToCart = async () => {
+  try {
+    await detailStore.addShopCar({
+      skuId: detailStore.skuInfo.id,
+      skuNum: skuNum.value,
+    });
+    sessionStorage.setItem("SKUINFO", JSON.stringify(detailStore.skuInfo));
+    router.push({ name: "addCartSuccess", query: { skuNum: skuNum.value } });
+  } catch (error) {
+    alert(error.message);
   }
 };
 </script>
