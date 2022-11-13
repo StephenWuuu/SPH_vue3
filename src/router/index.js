@@ -46,6 +46,13 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */"@/views/AddCartSuccess/index.vue"),
   },
+  {
+    path: "/shopcart",
+    name: "shopcart",
+    // meta: { isHideFooter: true },
+    component: () =>
+      import(/* webpackChunkName: "about" */"@/views/ShopCart/index.vue"),
+  },
 ];
 
 const router = createRouter({

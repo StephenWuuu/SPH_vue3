@@ -14,3 +14,9 @@ export const reqProductList = (params)=>requests({url:"/list",method:"post",data
 export const reqDetailInfo = (skuId)=>requests({url:`/item/${skuId}`,method:"get"})
 // 加入购物车
 export const reqAddShopCar = (skuId,skuNum)=>requests({url:`/cart/addToCart/${ skuId }/${ skuNum }`,method:"post"}) 
+// 获取购物车列表
+export const reqCartList = ()=>requests({url:`/cart/cartList`,method:"get"})
+// 改变商品的选取状态
+export const reqCheckedCartItem = (skuId,isChecked)=>requests({url:`/cart/checkCart/${skuId}/${isChecked}`,method:"get"})
+// 删除商品
+export const reqDeleteCartItem = (skuId)=>requests({url:`/cart/deleteCart/${skuId}`,method:"delete"})
