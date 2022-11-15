@@ -5,42 +5,55 @@
       <h3>
         注册新用户
         <span class="go"
-          >我有账号，去 <a href="login.html" target="_blank">登陆</a>
+          >我有账号，去 <router-link to="/login">登录</router-link>
         </span>
       </h3>
-      <div class="content">
-        <label>手机号:</label>
-        <input type="text" placeholder="请输入你的手机号" />
-        <span class="error-msg">错误提示信息</span>
-      </div>
-      <div class="content">
-        <label>验证码:</label>
-        <input type="text" placeholder="请输入验证码" />
-        <img
-          ref="code"
-          src="http://182.92.128.115/api/user/passport/code"
-          alt="code"
-        />
-        <span class="error-msg">错误提示信息</span>
-      </div>
-      <div class="content">
-        <label>登录密码:</label>
-        <input type="text" placeholder="请输入你的登录密码" />
-        <span class="error-msg">错误提示信息</span>
-      </div>
-      <div class="content">
-        <label>确认密码:</label>
-        <input type="text" placeholder="请输入确认密码" />
-        <span class="error-msg">错误提示信息</span>
-      </div>
-      <div class="controls">
-        <input name="m1" type="checkbox" />
-        <span>同意协议并注册《尚品汇用户协议》</span>
-        <span class="error-msg">错误提示信息</span>
-      </div>
-      <div class="btn">
-        <button>完成注册</button>
-      </div>
+
+      <el-form
+        ref="ruleFormRef"
+        :model="ruleForm"
+        status-icon
+        :rules="rules"
+        label-width="390px"
+        class="content"
+      >
+        <el-form-item label="手机号码" prop="phone">
+          <el-input v-model.number="ruleForm.phone" />
+        </el-form-item>
+        <el-form-item label="验证码" prop="code">
+          <el-input v-model="ruleForm.code" />
+          <el-button @click="getCode(phone)">获取验证码</el-button>
+        </el-form-item>
+        <el-form-item label="登录密码" prop="password">
+          <el-input
+            v-model="ruleForm.password"
+            type="password"
+            autocomplete="off"
+          />
+        </el-form-item>
+        <el-form-item label="确认密码" prop="password2">
+          <el-input
+            v-model="ruleForm.password2"
+            type="password"
+            autocomplete="off"
+          />
+        </el-form-item>
+        <el-form-item required>
+          <el-checkbox
+            label="同意协议并注册《库里商业协议》"
+            name="type"
+            v-model="ruleForm.agree"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            type="danger"
+            style="width: 100%"
+            @click="submitForm(ruleFormRef)"
+            >完成注册</el-button
+          >
+        </el-form-item>
+      </el-form>
     </div>
 
     <!-- 底部 -->
@@ -61,7 +74,112 @@
   </div>
 </template>
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, toRefs } from "vue";
+import { userStore } from "@/store/user";
+import { useRouter } from "vue-router";
+
+const store = userStore();
+const router = useRouter();
+// 获取验证码
+const getCode = async () => {
+  try {
+    const phone = ruleForm.phone;
+    phone && (await store.getPhoneCode(phone));
+    ruleForm.code = store.code;
+  } catch (error) {}
+};
+// 注册用户
+
+const ruleFormRef = ref(null);
+const checkPhone = (rule, value, callback) => {
+  if (!value) {
+    return callback(new Error("请输入手机号码"));
+  }
+  setTimeout(() => {
+    if (!Number.isInteger(value)) {
+      callback(new Error("请输入正确的手机号码!!"));
+    } else {
+      if (value < 18) {
+        callback(new Error("请输入正确的手机号码!!"));
+      } else {
+        callback();
+      }
+    }
+  }, 500);
+};
+
+const checkCode = (rule, value, callback) => {
+  if (!value) {
+    return callback(new Error("请输入验证码"));
+  } else {
+    callback();
+  }
+};
+
+const checkAgree = (rule, value, callback) => {
+  if (!value) {
+    return callback(new Error("请勾选同意协议!"));
+  } else {
+    callback();
+  }
+};
+
+const validatePass = (rule, value, callback) => {
+  if (value === "") {
+    callback(new Error("请输入登录密码"));
+  } else {
+    if (ruleForm.password2 !== "") {
+      if (!ruleFormRef.value) return;
+      ruleFormRef.value.validateField("password2", () => null);
+    }
+    callback();
+  }
+};
+const validatePass2 = (rule, value, callback) => {
+  if (value === "") {
+    callback(new Error("请再次输入密码"));
+  } else if (value !== ruleForm.password) {
+    callback(new Error("前后密码不一致!!"));
+  } else {
+    callback();
+  }
+};
+
+const ruleForm = reactive({
+  password: "",
+  password2: "",
+  phone: "",
+  code: "",
+  agree: true,
+});
+
+const rules = reactive({
+  password: [{ validator: validatePass, trigger: "blur" }],
+  password2: [{ validator: validatePass2, trigger: "blur" }],
+  phone: [{ validator: checkPhone, trigger: "blur" }],
+  code: [{ validator: checkCode, trigger: "blur" }],
+  agree: [{ validator: checkAgree, trigger: "blur" }],
+});
+
+const submitForm = (formEl) => {
+  if (!formEl) return;
+  formEl.validate(async (valid) => {
+    if (valid) {
+      console.log("submit!");
+      const { phone, code, password } = ruleForm;
+      await store.userRegister({
+        phone,
+        code,
+        password,
+      });
+      console.log("000000000");
+      router.push("/login");
+    } else {
+      console.log("error submit!");
+      return false;
+    }
+  });
+};
 </script>
 <style scoped lang="less">
 .register-container {
@@ -90,13 +208,9 @@ import { ref, reactive } from "vue";
       }
     }
 
-    div:nth-of-type(1) {
-      margin-top: 40px;
-    }
-
     .content {
-      padding-left: 390px;
-      margin-bottom: 18px;
+      margin-top: 80px;
+      padding-right: 390px;
       position: relative;
 
       label {
