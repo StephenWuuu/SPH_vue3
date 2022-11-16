@@ -117,7 +117,7 @@ const checkCode = (rule, value, callback) => {
 };
 
 const checkAgree = (rule, value, callback) => {
-  if (!value) {
+  if (value != true) {
     return callback(new Error("请勾选同意协议!"));
   } else {
     callback();

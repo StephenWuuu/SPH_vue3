@@ -17,11 +17,19 @@
             <form action="##">
               <div class="input-text clearFix">
                 <span></span>
-                <input type="text" placeholder="邮箱/用户名/手机号" />
+                <input
+                  type="text"
+                  placeholder="邮箱/用户名/手机号"
+                  v-model="user.phone"
+                />
               </div>
               <div class="input-text clearFix">
                 <span class="pwd"></span>
-                <input type="text" placeholder="请输入密码" />
+                <input
+                  type="text"
+                  placeholder="请输入密码"
+                  v-model="user.password"
+                />
               </div>
               <div class="setting clearFix">
                 <label class="checkbox inline">
@@ -30,7 +38,9 @@
                 </label>
                 <span class="forget">忘记密码？</span>
               </div>
-              <button class="btn">登&nbsp;&nbsp;录</button>
+              <button class="btn" @click.prevent="userLogin">
+                登&nbsp;&nbsp;录
+              </button>
             </form>
 
             <div class="call clearFix">
@@ -67,6 +77,26 @@
 </template>
 <script setup>
 import { ref, reactive } from "vue";
+import { userStore } from "@/store/user";
+import { useRoute, useRouter } from "vue-router";
+
+const store = userStore();
+const router = useRouter();
+const route = useRoute();
+const user = reactive({
+  phone: "",
+  password: "",
+});
+const userLogin = async () => {
+  try {
+    const { phone, password } = user;
+    phone && password && (await store.userLogin({ phone, password }));
+    let path = route.query.redirect || "/home";
+    router.push(path);
+  } catch (error) {
+    alert(error.message);
+  }
+};
 </script>
 <style scoped lang="less">
 .login-container {

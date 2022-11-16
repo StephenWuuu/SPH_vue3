@@ -5,10 +5,14 @@
       <div class="container">
         <div class="loginList">
           <p>尚品汇欢迎您！</p>
-          <p>
+          <p v-if="!userName">
             <span>请</span>
             <router-link to="/login">登录</router-link>
             <router-link class="register" to="/register">免费注册</router-link>
+          </p>
+          <p v-else>
+            <a>{{ userName }}</a>
+            <a class="register" @click="logout">退出登录</a>
           </p>
         </div>
         <div class="typeList">
@@ -47,16 +51,19 @@
           </button>
         </form>
       </div>
+      <!-- <button @click="store.getUserInfo()">test</button> -->
     </div>
   </header>
 </template>
 <script setup>
-import { ref, reactive, watch, onMounted } from "vue";
+import { ref, reactive, watch, onMounted, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { userStore } from "@/store/user";
 
 const router = useRouter();
 const route = useRoute();
 const keywords = ref("");
+const store = userStore();
 
 const goSearch = () => {
   const { path, query } = route;
@@ -78,6 +85,23 @@ const goSearch = () => {
     }
   }
 };
+
+const logout = () => {
+  try {
+    store.userLogout();
+    router.push("/home");
+  } catch (error) {
+    alert(error.message);
+  }
+};
+
+const userName = computed(() => {
+  return store.userInfo.name;
+});
+
+onMounted(() => {
+  store.getUserInfo();
+});
 </script>
 <style scoped lang="less">
 .header {

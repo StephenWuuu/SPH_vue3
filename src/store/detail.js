@@ -19,7 +19,7 @@ export const detailInfoStore = defineStore("detailInfo",{
             if(result.code==200){
                 return "ok"
             }else{
-                return Promise.reject(new Error("faile"))
+                return Promise.reject(new Error("fail"))
             }
             // console.log("++++++++++++++",result);
         }

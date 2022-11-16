@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia'
-import { reqPhoneCode, reqUserRegister } from '@/api'
-import { getToken } from '@/Utils/token'
+import { reqLogout, reqPhoneCode, reqUserInfo, reqUserLogin, reqUserRegister } from '@/api'
+import { getToken, removeToken, setToken } from '@/Utils/token'
 export const userStore = defineStore("userInfo",{
     state:()=>{
         return{
@@ -20,10 +20,40 @@ export const userStore = defineStore("userInfo",{
             }            
         },
         async userRegister(user){
-            console.log("*****",user);
             let result = await reqUserRegister(user)
-            console.log(".........",result);
             if(result.code==200){
+                return "ok"
+            }else{
+                return Promise.reject(new Error("fail"))
+            }
+        },
+        async userLogin(data){
+            let result = await reqUserLogin(data)
+            if(result.code==200){
+                this.token = result.data.token
+                setToken(result.data.token)
+                return "ok"
+            }else{
+                return Promise.reject(new Error("fail"))
+            }
+        },
+        async getUserInfo(){
+            let result = await reqUserInfo()
+            if(result.code==200){
+                console.log("6666666666666",result.data);
+                this.userInfo = result.data
+                console.log(this.userInfo);
+                return "ok"
+            }else{
+                return Promise.reject(new Error("fail"))
+            }
+        },
+        async userLogout(){
+            let result = await reqLogout()
+            if(result.code==200){
+                this.token = "",
+                this.userInfo = {},
+                removeToken()
                 return "ok"
             }else{
                 return Promise.reject(new Error("fail"))
