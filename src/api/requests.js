@@ -17,6 +17,10 @@ requests.interceptors.request.use((config)=>{
     if(localStorage.TOKEN ){
         config.headers.token = localStorage.TOKEN
     }
+    // 请求头带上uuid_token
+    if(localStorage.uuid_token){
+        config.headers.userTempId = localStorage.uuid_token
+    }
 
     NProgress.start()
     return config

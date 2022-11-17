@@ -1,6 +1,5 @@
 import requests from "./requests";
 import mockRequests from "./mockRequests";
-import { method } from "lodash";
 
 // 获取三级菜单
 export const reqCategoryList = ()=>requests({url:"/product/getBaseCategoryList",method:"get"})

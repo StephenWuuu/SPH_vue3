@@ -40,9 +40,7 @@ export const userStore = defineStore("userInfo",{
         async getUserInfo(){
             let result = await reqUserInfo()
             if(result.code==200){
-                console.log("6666666666666",result.data);
                 this.userInfo = result.data
-                console.log(this.userInfo);
                 return "ok"
             }else{
                 return Promise.reject(new Error("fail"))

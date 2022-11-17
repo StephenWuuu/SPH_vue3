@@ -1,10 +1,12 @@
 import { reqDetailInfo ,reqAddShopCar} from '@/api'
+import { getUUID } from '@/Utils/uuid_token'
 import { defineStore } from 'pinia'
 
 export const detailInfoStore = defineStore("detailInfo",{
     state:()=>{
         return{
-            detailInfo:{}
+            detailInfo:{},
+            uuid_token:getUUID()
         } 
     },
     actions:{
@@ -21,7 +23,6 @@ export const detailInfoStore = defineStore("detailInfo",{
             }else{
                 return Promise.reject(new Error("fail"))
             }
-            // console.log("++++++++++++++",result);
         }
     },
     getters:{
