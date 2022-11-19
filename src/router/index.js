@@ -70,6 +70,20 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */"@/views/Pay/index.vue"),
   },
+  {
+    path: "/paysuccess",
+    name: "paysuccess",
+    // meta: { isHideFooter: true },
+    component: () =>
+      import(/* webpackChunkName: "about" */"@/views/PaySuccess/index.vue"),
+  },
+  {
+    path: "/center",
+    name: "center",
+    // meta: { isHideFooter: true },
+    component: () =>
+      import(/* webpackChunkName: "about" */"@/views/Center/index.vue"),
+  },
 ];
 
 const router = createRouter({

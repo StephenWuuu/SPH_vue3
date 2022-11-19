@@ -37,3 +37,5 @@ export const reqAddressInfo = ()=>requests({url:`/user/userAddress/auth/findUser
 export const reqSubmitOrder = (tradeNo,data)=>requests({url:`/order/auth/submitOrder?tradeNo=${tradeNo}`,data,method:"post"})
 // 获取支付信息
 export const reqPayInfo = (orderId)=>requests({url:`/payment/weixin/createNative/${orderId}`,method:"get"})
+// 获取订单信息
+export const reqOrderInfo = (page,limit)=>requests({url:`/order/auth/${page}/${limit}`,method:"get"})

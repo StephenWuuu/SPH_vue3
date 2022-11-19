@@ -76,10 +76,11 @@
         <div class="hr"></div>
 
         <div class="submit">
-          <a class="btn" @click="open">立即支付</a>
-          <div v-if="pop_ups">
-            <img :src="url" />
-          </div>
+          <!-- <a class="btn" @click="ddd">立即支付</a> -->
+          <el-button class="btn" style="height: 54px" text @click="open"
+            >立即支付</el-button
+          >
+          <!-- <el-button @click="dialogVisible = true">立即支付</el-button> -->
           <!-- <router-link class="btn" to="/paysuccess">立即支付</router-link> -->
         </div>
         <div class="otherpay">
@@ -100,25 +101,75 @@ import { ref, reactive, onMounted, computed } from "vue";
 import { payStore } from "@/store/pay";
 import { useRoute, useRouter } from "vue-router";
 import QRCode from "qrcode";
+import { ElMessage, ElMessageBox } from "element-plus";
+import "element-plus/es/components/message/style/css";
+import "element-plus/es/components/message-box/style/css";
 
 const store = payStore();
 const route = useRoute();
 const router = useRouter();
+const timer = ref(null);
+const code = ref("");
 // 定义弹窗
-const pop_ups = ref(false);
-const imgUrl = ref(null);
 onMounted(() => {
   store.getPayInfo(route.query.orderId);
 });
 const payInfoList = computed(() => {
   return store.payInfo;
 });
+
 const open = async () => {
   let url = await QRCode.toDataURL(payInfoList.value.codeUrl);
-  url ? (pop_ups.value = true) : (pop_ups.value = true);
-  //   alert(`<img src="${url}" />`, "请扫码支付");
-  imgUrl.value = url;
+  ElMessageBox.alert(`<img src=${url} />`, "请扫码支付", {
+    dangerouslyUseHTMLString: true,
+    center: true,
+    showCancelButton: true,
+    cancelButtonText: "支付遇见问题",
+    confirmButtonText: "已支付成功",
+    showClose: false,
+    beforeClose: (type, instance, done) => {
+      if (type == "cancel") {
+        alert("别支付了");
+        clearInterval(timer);
+        timer.value = null;
+        done();
+      } else {
+        // if(this.code==200){
+        clearInterval(timer);
+        timer.value = null;
+        done();
+        router.push("/paysuccess");
+        // }
+      }
+    },
+  });
+  if (!timer) {
+    timer = setInterval(async () => {
+      let result = await store.payStatue(route.query.orderId);
+      console.log("8888888", result);
+      if (result.code == 200) {
+        clearInterval(timer);
+        (timer.value = null), (code.value = result.code);
+        $msgbox.close();
+        router.push("paysuccess");
+      }
+    }, 2000);
+  }
 };
+
+// const open = async () => {
+//   let url = await QRCode.toDataURL(payInfoList.value.codeUrl);
+//   //   alert(`<img src="${url}" />`, "请扫码支付");
+//   console.log("怎么就不行呢", url);
+//   alert(`<img src=${url} />`, "lalala", {
+//     dangerouslyUseHTMLString: true,
+//     center: true,
+//     showCancelButton: true,
+//     cancelButtonText: "支付遇见问题",
+//     confirmButtonText: "已支付成功",
+//     showClose: false,
+//   });
+// };
 </script>
 <style lang="less" scoped>
 .pay-main {

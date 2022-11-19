@@ -12,7 +12,6 @@ export const payStore = defineStore("pay",{
         async getPayInfo(orderId){
             let result =  await reqPayInfo(orderId)
             if(result.code==200){
-                console.log(result.data);
                 this.payInfo = result.data
             }
         }
