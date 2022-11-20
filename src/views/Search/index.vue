@@ -130,8 +130,8 @@
           :pager-count="5"
           :page-count="searchStore.productLists.totalPages"
           layout="prev, pager, next"
-          v-model="searchParams.pageNo"
-          @click="getPageNo"
+          v-model:current-page="searchParams.pageNo"
+          @current-change="getPageNo"
         />
       </div>
     </div>
@@ -197,9 +197,8 @@ const changeOrder = (flag) => {
   getData();
 };
 
-const getPageNo = (event) => {
-  searchParams.pageNo = event.target.innerHTML;
-  getData();
+const getPageNo = async () => {
+  await getData();
 };
 const removeCategoryName = () => {
   searchParams.categoryName = undefined;

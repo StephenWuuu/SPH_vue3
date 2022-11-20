@@ -48,13 +48,12 @@
             <li>夺宝岛</li>
             <li>DIY装机</li>
             <li>延保服务</li>
-            <li>尚品汇E卡</li>
-            <li>尚品汇通信</li>
+            <li>无风E卡</li>
+            <li>无风通信</li>
           </ul>
         </div>
         <div class="footerItem">
-          <h4>帮助中心</h4>
-          <img src="./images/wx_cz.jpg" />
+          <img src="./images/apple-touch-icon.png" />
         </div>
       </div>
       <div class="copyright">

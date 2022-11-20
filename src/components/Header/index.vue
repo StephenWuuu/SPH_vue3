@@ -4,7 +4,7 @@
     <div class="top">
       <div class="container">
         <div class="loginList">
-          <p>尚品汇欢迎您！</p>
+          <p>无风欢迎您！</p>
           <p v-if="!userName">
             <span>请</span>
             <router-link to="/login">登录</router-link>
@@ -16,26 +16,30 @@
           </p>
         </div>
         <div class="typeList">
-          <a href="###">我的订单</a>
+          <router-link to="/center">我的订单</router-link>
           <router-link to="/shopcart">我的购物车</router-link>
-          <a href="###">我的尚品汇</a>
-          <a href="###">尚品汇会员</a>
-          <a href="###">企业采购</a>
-          <a href="###">关注尚品汇</a>
-          <a href="###">合作招商</a>
-          <a href="###">商家后台</a>
+          <a href="javascript::">我的无风</a>
+          <a href="javascript::">无风会员</a>
+          <a href="javascript::">企业采购</a>
+          <a href="javascript::">关注无风</a>
+          <a href="javascript::">合作招商</a>
+          <a href="javascript::">商家后台</a>
         </div>
       </div>
     </div>
     <!--头部第二行 搜索区域-->
     <div class="bottom">
       <h1 class="logoArea">
-        <router-link class="logo" title="尚品汇" to="/home">
-          <img src="./images/logo.png" alt="" />
+        <router-link class="logo" title="无风" to="/home">
+          <img
+            style="width: 60px"
+            src="./images/android-chrome-192x192.png"
+            alt=""
+          />
         </router-link>
       </h1>
       <div class="searchArea">
-        <form action="###" class="searchForm">
+        <form class="searchForm">
           <input
             type="text"
             id="autocomplete"
@@ -51,12 +55,11 @@
           </button>
         </form>
       </div>
-      <!-- <button @click="store.getUserInfo()">test</button> -->
     </div>
   </header>
 </template>
 <script setup>
-import { ref, reactive, watch, onMounted, computed } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { userStore } from "@/store/user";
 
@@ -74,14 +77,18 @@ const goSearch = () => {
         params: { keywords: keywords.value || undefined },
         query,
       });
+      keywords.value = "";
     } else {
       router.push(`/search/${keywords.value}`);
+      keywords.value = "";
     }
   } else {
     if (path.indexOf("/search") === 0) {
       router.push({ name: "search", query });
+      keywords.value = "";
     } else {
       router.push({ name: "search" });
+      keywords.value = "";
     }
   }
 };

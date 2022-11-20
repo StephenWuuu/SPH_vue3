@@ -18,7 +18,7 @@
         class="content"
       >
         <el-form-item label="手机号码" prop="phone">
-          <el-input v-model.number="ruleForm.phone" />
+          <el-input v-model="ruleForm.phone" />
         </el-form-item>
         <el-form-item label="验证码" prop="code">
           <el-input v-model="ruleForm.code" />
@@ -47,7 +47,7 @@
         </el-form-item>
         <el-form-item>
           <el-button
-            type="danger"
+            type="default"
             style="width: 100%"
             @click="submitForm(ruleFormRef)"
             >完成注册</el-button
@@ -88,7 +88,6 @@ const getCode = async () => {
     ruleForm.code = store.code;
   } catch (error) {}
 };
-// 注册用户
 
 const ruleFormRef = ref(null);
 const checkPhone = (rule, value, callback) => {
@@ -96,14 +95,10 @@ const checkPhone = (rule, value, callback) => {
     return callback(new Error("请输入手机号码"));
   }
   setTimeout(() => {
-    if (!Number.isInteger(value)) {
+    if (!/^(?:(?:\+|00)86)?1[3-9]\d{9}$/.test(value)) {
       callback(new Error("请输入正确的手机号码!!"));
     } else {
-      if (value < 18) {
-        callback(new Error("请输入正确的手机号码!!"));
-      } else {
-        callback();
-      }
+      callback();
     }
   }, 500);
 };
@@ -117,6 +112,7 @@ const checkCode = (rule, value, callback) => {
 };
 
 const checkAgree = (rule, value, callback) => {
+  console.log("agree", value);
   if (value != true) {
     return callback(new Error("请勾选同意协议!"));
   } else {
@@ -124,15 +120,24 @@ const checkAgree = (rule, value, callback) => {
   }
 };
 
+// /^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Z])(?=\S*[a-z])(?=\S*[!@#$%^&*? ])\S*$/
 const validatePass = (rule, value, callback) => {
   if (value === "") {
     callback(new Error("请输入登录密码"));
   } else {
-    if (ruleForm.password2 !== "") {
-      if (!ruleFormRef.value) return;
-      ruleFormRef.value.validateField("password2", () => null);
+    console.log("555555555555", value);
+    /^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Z])(?=\S*[a-z])(?=\S*[!@#$%^&*? ])\S*$/;
+    const reg =
+      /^\S*(?=\S{6,})^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\W_!@#$%^&*`~()-+=]+$)(?![a-z0-9]+$)(?![a-z\W_!@#$%^&*`~()-+=]+$)(?![0-9\W_!@#$%^&*`~()-+=]+$)[a-zA-Z0-9\W_!@#$%^&*`~()-+=]/;
+    if (!reg.test(value)) {
+      callback(new Error("请输入至少包含字母、数字、特殊符号的6位以上的密码"));
+    } else {
+      if (ruleForm.password2 !== "") {
+        if (!ruleFormRef.value) return;
+        ruleFormRef.value.validateField("password2", () => null);
+      }
+      callback();
     }
-    callback();
   }
 };
 const validatePass2 = (rule, value, callback) => {
@@ -172,7 +177,6 @@ const submitForm = (formEl) => {
         code,
         password,
       });
-      console.log("000000000");
       router.push("/login");
     } else {
       console.log("error submit!");
@@ -209,7 +213,7 @@ const submitForm = (formEl) => {
     }
 
     .content {
-      margin-top: 80px;
+      margin-top: 40px;
       padding-right: 390px;
       position: relative;
 
