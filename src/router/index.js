@@ -89,6 +89,10 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  scrollBehavior (to, from, savedPosition) {
+    // return 期望滚动到哪个的位置
+    return {y:0}
+  }
 });
 
 

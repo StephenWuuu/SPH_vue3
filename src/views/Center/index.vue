@@ -88,13 +88,18 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td width="60%">
-                      <div class="typographic">
+                    <td class="goods">
+                      <div
+                        class="typographic"
+                        width="60%"
+                        v-for="goods in order.orderDetailList"
+                        :key="goods.id"
+                      >
                         <img
                           style="width: 100px; height: 100px"
-                          :src="order.orderDetailList[0].imgUrl"
+                          :src="goods.imgUrl"
                         />
-                        <a href="#" class="block-text">{{ order.tradeBody }}</a>
+                        <a href="#" class="block-text">{{ goods.skuName }}</a>
                         <span>x1</span>
                         <a href="#" class="service">售后申请</a>
                       </div>
@@ -119,7 +124,7 @@
                       </ul>
                     </td>
                   </tr>
-                  <tr>
+                  <!-- <tr>
                     <td width="50%">
                       <div class="typographic">
                         <img
@@ -131,7 +136,7 @@
                         <a href="#" class="service">售后申请</a>
                       </div>
                     </td>
-                  </tr>
+                  </tr> -->
                 </tbody>
               </table>
             </div>
@@ -355,6 +360,10 @@ const getPageNo = (page) => {
                   }
                 }
               }
+              .goods {
+                display: flex;
+                flex-direction: column;
+              }
 
               td {
                 font-size: 12px;
@@ -370,6 +379,8 @@ const getPageNo = (page) => {
                 }
 
                 .typographic {
+                  padding: 10px 0;
+                  border-bottom: 1px solid #e6e6e6;
                   img {
                     float: left;
                     margin-right: 10px;
@@ -377,6 +388,7 @@ const getPageNo = (page) => {
 
                   a {
                     float: left;
+                    // width: 250px;
                     min-width: 80px;
                     max-width: 250px;
                     color: #e1251b;

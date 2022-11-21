@@ -3,53 +3,55 @@
     <div class="container">
       <div @mouseenter="showCategory" @mouseleave="hideCategory">
         <h2 class="all">全部商品分类</h2>
-        <div class="sort" v-show="isShow">
-          <div class="all-sort-list2" @click="goSearch">
-            <div
-              class="item"
-              v-for="(c1, index) in store.categoryLists"
-              :key="c1.categoryId"
-              :class="{ cur: currentIndex == index }"
-            >
-              <h3 @mouseenter="changeIndex(index)">
-                <a
-                  :data-categoryName="c1.categoryName"
-                  :data-category1Id="c1.categoryId"
-                  >{{ c1.categoryName }}</a
-                >
-              </h3>
-              <div class="item-list clearfix">
-                <div class="subitem">
-                  <dl
-                    class="fore"
-                    v-for="(c2, index) in c1.categoryChild"
-                    :key="c2.categoryId"
+        <transition name="sort">
+          <div class="sort" v-show="isShow">
+            <div class="all-sort-list2" @click="goSearch">
+              <div
+                class="item"
+                v-for="(c1, index) in store.categoryLists"
+                :key="c1.categoryId"
+                :class="{ cur: currentIndex == index }"
+              >
+                <h3 @mouseenter="changeIndex(index)">
+                  <a
+                    :data-categoryName="c1.categoryName"
+                    :data-category1Id="c1.categoryId"
+                    >{{ c1.categoryName }}</a
                   >
-                    <dt>
-                      <a
-                        :data-categoryName="c2.categoryName"
-                        :data-category1Id="c2.categoryId"
-                        >{{ c2.categoryName }}</a
-                      >
-                    </dt>
-                    <dd>
-                      <em
-                        v-for="(c3, index) in c2.categoryChild"
-                        :key="c3.categoryId"
-                      >
+                </h3>
+                <div class="item-list clearfix">
+                  <div class="subitem">
+                    <dl
+                      class="fore"
+                      v-for="(c2, index) in c1.categoryChild"
+                      :key="c2.categoryId"
+                    >
+                      <dt>
                         <a
-                          :data-categoryName="c3.categoryName"
-                          :data-category1Id="c3.categoryId"
-                          >{{ c3.categoryName }}</a
+                          :data-categoryName="c2.categoryName"
+                          :data-category1Id="c2.categoryId"
+                          >{{ c2.categoryName }}</a
                         >
-                      </em>
-                    </dd>
-                  </dl>
+                      </dt>
+                      <dd>
+                        <em
+                          v-for="(c3, index) in c2.categoryChild"
+                          :key="c3.categoryId"
+                        >
+                          <a
+                            :data-categoryName="c3.categoryName"
+                            :data-category1Id="c3.categoryId"
+                            >{{ c3.categoryName }}</a
+                          >
+                        </em>
+                      </dd>
+                    </dl>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </transition>
       </div>
       <nav class="nav">
         <a href="###">服装城</a>

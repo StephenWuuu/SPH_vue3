@@ -21,7 +21,8 @@
     "swiper": "^8.4.4",
     "uuid": "^9.0.0",
     "vue": "^3.2.13",
-    "vue-router": "^4.0.3"
+    "vue-router": "^4.0.3",
+    "vue3-lazyload": "^0.3.6"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
